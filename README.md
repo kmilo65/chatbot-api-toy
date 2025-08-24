@@ -1,6 +1,6 @@
 # Personal AI Chatbot
 
-A modern web-based AI chatbot built with FastAPI and OpenAI's GPT-4, featuring both conversational AI capabilities and AI-powered image generation. This project provides an interactive web interface for users to engage with an AI tutor specialized in Python programming and generate custom images through natural language prompts.
+This project is a modern web-based AI chatbot built with FastAPI and OpenAI's GPT-4, offering both conversational AI and AI-powered image generation. While it uses up-to-date technologies and provides an interactive web interface for users to chat with a Python tutor AI or generate images from text prompts, its primary purpose is educational. The main objective is to help users (and the developer) become familiar with the general requirements and steps involved in implementing a chatbot application, rather than serving as a production-ready tool.
 
 ## Features
 
