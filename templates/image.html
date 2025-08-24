@@ -1,0 +1,32 @@
+{% include 'layout.html' %}
+
+<div class="container mt-5">
+  <h3>
+    Add input to generate images from a personal chatbot
+  </h3>
+  <form action="/image" method="POST">
+    <div>
+      <textarea class="form-control" placeholder="Add input here" name="user_input" rows="3"></textarea>
+      <button class="btn btn-primary mt-1" type="submit">Send</button>
+    </div>
+  </form>
+
+  <div>
+    <div class="card text-center mt-3">
+      <div class="card-header">
+        Image Generation
+      </div>
+      <div class="card-body">
+        <div>
+          {# Only render the image if image_url is defined and not empty #}
+          {% if image_url %}
+            <img src="{{ image_url }}" alt="Generated image" class="img-fluid" style="max-width: 100%; height: auto;">
+          {% else %}
+            <p class="text-muted">No image generated yet. Submit a prompt above.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
