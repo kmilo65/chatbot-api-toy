@@ -12,7 +12,7 @@ This project is a modern web-based AI chatbot built with FastAPI and OpenAI's GP
 
 ## Project Description
 
-This chatbot is designed as a Python tutor AI that helps users learn Python programming from scratch. It provides clear instructions on Python concepts, best practices, and syntax, creating a structured learning path for users to develop production-ready Python applications. The system also includes an image generation feature for creating visual content based on text prompts.
+This chatbot is designed as a Python tutor AI that helps users learn Python programming from scratch. It provides clear instructions on Python concepts, best practices, and syntax, creating a structured learning path for users to develop production-ready Python applications. The system also includes an image generation feature for creating visual content based on text prompts. Communication between the client and server is handled using WebSocket, a protocol particularly well-suited for chat applications due to its ability to provide real-time, bidirectional communication.
 
 ## Installation Instructions
 
