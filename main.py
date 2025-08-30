@@ -1,6 +1,6 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Request, WebSocket
 # The following import brings in 'Annotated' from the 'typing' module.
 # 'Annotated' is used for adding metadata to type hints, which can be useful
 # for frameworks like FastAPI to provide additional information about parameters.
@@ -17,6 +17,7 @@ templates = Jinja2Templates(directory="templates")
 
 chat_responses = []
 
+model=os.getenv("OPENAI_MODEL")
 openai=OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
               )
@@ -28,6 +29,108 @@ chat_history = [{'role': 'system',
                         to create real life, production ready python applications.'
              }]
 
+
+@app.websocket("/ws")
+async def chat(websocket: WebSocket):
+    await websocket.accept()
+
+    while True:
+        user_input = await websocket.receive_text()
+        chat_history.append({"role": "user", "content": user_input})
+        chat_responses.append(user_input)
+
+        try:
+            response = openai.chat.completions.create(
+                model="gpt-4",  # or use a config variable
+                messages=chat_history,
+                temperature=0.6,
+                stream=True
+            )
+
+            ai_response = ""
+
+            for chunk in response:
+                content_piece = chunk.choices[0].delta.content
+                if content_piece is not None:
+                    ai_response += content_piece
+                    await websocket.send_text(content_piece)
+
+            # Save the assistant’s *complete* response
+            if ai_response.strip():
+                chat_history.append({"role": "assistant", "content": ai_response})
+                chat_responses.append(ai_response)
+
+        except Exception as e:
+            await websocket.send_text(f"Error: {str(e)}")
+            break
+
+
+'''
+@app.websocket("/ws")
+async def chat(websocket: WebSocket):
+
+    await websocket.accept()
+
+    while True:
+        user_input = await websocket.receive_text()
+        chat_history.append({'role': 'user', 'content': user_input})
+        chat_responses.append(user_input)
+
+        try:
+            response = openai.chat.completions.create(
+                model='gpt-4',
+                messages=chat_history,
+                temperature=0.6,
+                stream=True
+            )
+
+            ai_response = ''
+
+            for chunk in response:
+                if chunk.choices[0].delta.content is not None:
+                    ai_response += chunk.choices[0].delta.content
+                    await websocket.send_text(chunk.choices[0].delta.content)
+            chat_responses.append(ai_response)
+
+        except Exception as e:
+            await websocket.send_text(f'Error: {str(e)}')
+            break
+'''
+'''
+@app.websocket("/ws")
+async def chat(websocket: WebSocket):
+    await websocket.accept()  # Accept the WebSocket connection from the client
+    while True:  # Start an infinite loop to keep the connection open and handle messages
+        user_input = await websocket.receive_text()  # Wait for a text message from the client
+        chat_history.append({"role": "user", "content": user_input})
+        chat_responses.append(user_input)
+
+        try:
+            response = openai.chat.completions.create(
+                model=model,
+                messages=chat_history,
+                temperature=0.6,
+                stream=True  # This is the key to enable streaming
+            )
+
+            ai_response = ""
+            for chunk in response:
+                content_piece = chunk.choices[0].delta.content
+                if content_piece is not None:  # check if the chunk still has content
+                    ai_response += content_piece
+                    await websocket.send_text(content_piece)
+            chat_responses.append(ai_response)
+
+            # After streaming is done, check if we need to add the new chunk to the chat_history
+            # Only add if ai_response is not empty
+            #if ai_response.strip():
+            #    chat_history.append({"role": "assistant", "content": ai_response})
+
+        except Exception as e:
+            await websocket.send_text(f"Error: {str(e)}")
+            break
+'''
+    
 
 
 # This route handles GET requests to the root URL ("/").
@@ -47,7 +150,7 @@ async def chat(request: Request, user_input: Annotated[str, Form()]):
 
     
     response=openai.chat.completions.create(
-        model="gpt-4o-mini",
+        model=model,
         messages=chat_history,
         temperature=0.6
     )

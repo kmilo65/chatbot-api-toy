@@ -36,7 +36,7 @@ The project requires the following main dependencies:
 1. **Clone the repository** (if applicable):
    ```bash
    git clone <repository-url>
-   cd openaichatbot
+   cd openaichatwebsocket
    ```
 
 2. **Create a virtual environment** (recommended):
@@ -59,6 +59,7 @@ The project requires the following main dependencies:
    Create a `.env` file in the project root and add your OpenAI API key:
    ```
    OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_MODEL=gpt-4
    ```
 
 ## How to Run the Chatbot Using Uvicorn
@@ -126,11 +127,14 @@ Once the server is running, you can access the chatbot through your web browser:
 ## Project Structure
 
 ```
-openaichatbot/
+openaichatwebsocket/
 ├── main.py                 # Main FastAPI application file
 ├── requirements.txt        # Python dependencies
 ├── .env                   # Environment variables (create this)
 ├── .gitignore            # Git ignore file
+├── .venv/                # Virtual environment directory
+├── __pycache__/          # Python cache directory
+├── .git/                 # Git repository directory
 └── templates/            # HTML templates
     ├── layout.html       # Base template with Bootstrap styling
     ├── navbar.html       # Navigation component
@@ -144,17 +148,21 @@ openaichatbot/
 - **`templates/`**: Jinja2 HTML templates for the web interface
 - **`requirements.txt`**: Lists all Python package dependencies
 - **`.env`**: Configuration file for API keys (not included in repository)
+- **`.venv/`**: Virtual environment directory (created during setup)
+- **`__pycache__/`**: Python bytecode cache directory (auto-generated)
+- **`.git/`**: Git repository metadata directory
 
 ## Additional Notes
 
 ### Environment Variables
 
-The application requires the following environment variable:
+The application requires the following environment variables:
 - `OPENAI_API_KEY`: Your OpenAI API key for accessing GPT-4 and DALL-E services
+- `OPENAI_MODEL`: The OpenAI model to use (defaults to "gpt-4" if not set)
 
 ### Configuration
 
-- **Model**: Uses GPT-4o-mini for chat responses
+- **Model**: Uses GPT-4 for chat responses (configurable via OPENAI_MODEL environment variable)
 - **Temperature**: Set to 0.6 for balanced creativity and consistency
 - **Image Size**: Generated images are 512x512 pixels
 - **Chat History**: Maintains conversation context during the session
@@ -169,7 +177,7 @@ The application requires the following environment variable:
 
 To customize the chatbot:
 
-1. **Change AI Personality**: Modify the system message in `main.py` (lines 25-29)
+1. **Change AI Personality**: Modify the system message in `main.py` (around lines 25-29)
 2. **Adjust Model Parameters**: Change temperature, model, or other OpenAI parameters
 3. **Modify UI**: Edit HTML templates in the `templates/` directory
 4. **Add Features**: Extend the FastAPI application with new routes and functionality
